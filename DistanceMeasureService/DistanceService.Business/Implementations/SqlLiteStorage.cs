@@ -7,6 +7,10 @@ namespace DistanceService.Business.Implementations
 {
     public class SqlLiteStorage : IAirportDataStorage, IDisposable
     {
+        private const string SelectQuery = "SELECT LAT, LON FROM airports WHERE IATA_CODE = @iataCode";
+
+        public const string ConnectionStringKey = "ConnectionStrings:SqlLite";
+
         private readonly SQLiteConnection _connection;
 
         public SqlLiteStorage(string connectionString)
@@ -28,8 +32,8 @@ namespace DistanceService.Business.Implementations
             {
                 return false;
             }
-                                            
-            var sql = "SELECT LAT, LON FROM airports WHERE IATA_CODE = @iataCode";
+
+            var sql = SelectQuery;
             SQLiteCommand cmd = new SQLiteCommand(sql, _connection);
             cmd.Parameters.AddWithValue("@iataCode", iataCode);
             cmd.Prepare();
@@ -54,11 +58,11 @@ namespace DistanceService.Business.Implementations
                 return (false, coords);
             }
 
-            var sql = "SELECT LAT, LON FROM airports WHERE IATA_CODE = @iataCode";
+            var sql = SelectQuery;
             var cmd = new SQLiteCommand(sql, _connection);
             cmd.Parameters.AddWithValue("@iataCode", iataCode);
             await cmd.PrepareAsync();
-            using var reader = await cmd.ExecuteReaderAsync();
+            await using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
                 var lat = reader.GetDouble(0);

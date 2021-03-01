@@ -28,7 +28,7 @@ Longitude: -180 to +180
         /// </summary>
         public double Longitude { get; }
 
-        internal LatLongCoordinates(double lat, double lon)
+        public LatLongCoordinates(double lat, double lon)
         {
             this.Latitude = lat;
             this.Longitude = lon;
@@ -44,11 +44,11 @@ Longitude: -180 to +180
         {
             if (lat > MaxLat || lat < MinLat || double.IsNaN(lat))
             {
-                throw new ArgumentException("Invalid lat value", nameof(lat));
+                throw new ArgumentException("Invalid latitude value", nameof(lat));
             }
             if (lon > MaxLon || lon < MinLon || double.IsNaN(lon))
             {
-                throw new ArgumentException("Invalid lon value", nameof(lon));
+                throw new ArgumentException("Invalid longitude value", nameof(lon));
             }
 
             return new LatLongCoordinates(lat, lon);

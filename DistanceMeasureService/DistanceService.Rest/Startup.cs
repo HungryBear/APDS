@@ -29,7 +29,7 @@ namespace DistanceService.Rest
                 {
                     Version = "v1",
                     Title = "Distance Evaluation API",
-                    Description = "A simple ASP.NET Core Web API service implementing haversine distance evaluation (in miles) between two airports. Airports are specified using IATA code,lat-lon coordinates are resolved using internal dictionary.",
+                    Description = "A simple ASP.NET Core Web API service providing haversine distance evaluation between two airports (in miles).",
                 });
             });
         }

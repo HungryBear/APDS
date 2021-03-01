@@ -21,7 +21,7 @@ namespace DistanceService.Rest.Controllers
         public double GetDistance(string src,  string dst)
         {
             var result = _distanceMeasureService.Eval(src, dst);
-            _logger.LogInformation($"Distance {src}-{dst} = {result:F7} miles");
+            _logger.LogInformation($"Request evaluation : Distance {src}-{dst} = {result:F7} miles");
             return result;
         }
     }

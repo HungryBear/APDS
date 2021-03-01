@@ -14,5 +14,14 @@ namespace DistanceService.UnitTests
             var data = new[]{LatLongCoordinates.New(10f, 3f), LatLongCoordinates.New(4f, 5f)};
 
         }
+
+        [Fact]
+        public void TestZeroDistance()
+        {
+            var p1 = new LatLongCoordinates();
+            var p2 = new LatLongCoordinates();
+
+            Assert.True(Eval.Haversine(ref p1, ref p2).NearEqual(0)));
+        }
     }
 }

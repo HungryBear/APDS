@@ -10,7 +10,7 @@ namespace DistanceService.Business
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IDistanceEvaluationComponent, HaversineDistanceEval>();
-            services.AddSingleton<IAirportDataStorage, SqlLiteStorage>(sp => new SqlLiteStorage(configuration.GetSection("ConnectionStrings:SqlLite").Value));
+            services.AddSingleton<IAirportDataStorage, SqlLiteStorage>(sp => new SqlLiteStorage(configuration.GetSection(SqlLiteStorage.ConnectionStringKey).Value));
             services.AddScoped<DistanceMeasureService>();
 
         }

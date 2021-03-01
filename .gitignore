@@ -333,3 +333,15 @@
 /DistanceMeasureService/Playground/obj/Playground.csproj.nuget.g.targets
 /DistanceMeasureService/Playground/obj/project.assets.json
 /DistanceMeasureService/Playground/obj/project.nuget.cache
+/DistanceMeasureService/.vs/DistanceService/v16/.suo
+/DistanceMeasureService/ServiceClient/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
+/DistanceMeasureService/ServiceClient/obj/Debug/netcoreapp3.1/ServiceClient.AssemblyInfo.cs
+/DistanceMeasureService/ServiceClient/obj/Debug/netcoreapp3.1/ServiceClient.AssemblyInfoInputs.cache
+/DistanceMeasureService/ServiceClient/obj/Debug/netcoreapp3.1/ServiceClient.assets.cache
+/DistanceMeasureService/ServiceClient/obj/Debug/netcoreapp3.1/ServiceClient.csprojAssemblyReference.cache
+/DistanceMeasureService/ServiceClient/obj/project.assets.json
+/DistanceMeasureService/ServiceClient/obj/project.nuget.cache
+/DistanceMeasureService/ServiceClient/obj/ServiceClient.csproj.nuget.dgspec.json
+/DistanceMeasureService/ServiceClient/obj/ServiceClient.csproj.nuget.g.props
+/DistanceMeasureService/ServiceClient/obj/ServiceClient.csproj.nuget.g.targets
+/DistanceMeasureService/Playground/obj/Debug/net5.0/Playground.csprojAssemblyReference.cache
