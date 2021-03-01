@@ -21,7 +21,7 @@ namespace DistanceService.UnitTests
             var p1 = new LatLongCoordinates();
             var p2 = new LatLongCoordinates();
 
-            Assert.True(Eval.Haversine(ref p1, ref p2).NearEqual(0)));
+            Assert.True(Eval.Haversine(ref p1, ref p2).NearEqual(0));
         }
     }
 }
