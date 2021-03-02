@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using DistanceService.Business;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace DistanceService.Rest.Controllers
@@ -17,12 +22,42 @@ namespace DistanceService.Rest.Controllers
             _distanceMeasureService = distanceMeasureService;
         }
 
-        [HttpGet("{src}/{dst}")]
-        public double GetDistance(string src,  string dst)
+        /// <summary>
+        /// Evaluates distance in miles between two airports, airports are described by IATA codes
+        /// </summary>
+        /// <param name="src">Source airport IATA code</param>
+        /// <param name="dst">Destination airport IATA code</param>
+        /// <returns>Distance in miles between source and destination</returns>
+        [HttpGet("/eval")]
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
+        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(double), 200)]
+        public double GetDistance([FromQuery] string src, [FromQuery] string dst)
         {
+
             var result = _distanceMeasureService.Eval(src, dst);
             _logger.LogInformation($"Request evaluation : Distance {src}-{dst} = {result:F7} miles");
             return result;
+
+        }
+
+        /// <summary>
+        /// Returns all stored IATA codes
+        /// </summary>
+        /// <returns>An array of 3-Letter IATA codes for all airports stored in the cache.</returns>
+        [HttpGet("/iata")]
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
+        public async Task<IEnumerable<string>> GetIataCodes()
+        {
+            _logger.LogInformation($"All IATA Codes requested.");
+            var res = new List<string>();
+            await foreach (var code in _distanceMeasureService.GetAllCodes())
+            {
+                res.Add(code);
+            }
+
+            return res;
         }
     }
 }

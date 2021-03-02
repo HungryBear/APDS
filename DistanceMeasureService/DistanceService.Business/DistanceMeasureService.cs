@@ -1,32 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using DistanceService.Domain;
-
+using Microsoft.Extensions.Logging;
 namespace DistanceService.Business
 {
     public class DistanceMeasureService
     {
         private readonly IDistanceEvaluationComponent _distanceEval;
         private readonly IAirportDataStorage _airportDict;
+        private readonly ILogger<DistanceMeasureService> _logger;
 
-        public DistanceMeasureService(IDistanceEvaluationComponent distanceEval, IAirportDataStorage airportDict)
+        public DistanceMeasureService(IDistanceEvaluationComponent distanceEval, IAirportDataStorage airportDict, ILogger<DistanceMeasureService> logger)
         {
             _distanceEval = distanceEval;
             _airportDict = airportDict;
+            _logger = logger;
         }
 
         public double Eval(string srcIata, string dstIata)
         {
-            if (!_airportDict.Query(srcIata, out var srcAirport))
+            try
             {
-                throw new ArgumentException($"Invalid source IATA code = {srcIata}", nameof(srcIata));
-            }
+                if (string.IsNullOrWhiteSpace(srcIata))
+                    throw new ArgumentNullException(nameof(srcIata));
+                if (string.IsNullOrWhiteSpace(dstIata))
+                    throw new ArgumentNullException(nameof(dstIata));
+                if (!_airportDict.Query(srcIata.ToUpperInvariant(), out var srcAirport))
+                {
+                    throw new ArgumentException($"Invalid source IATA code = {srcIata.ToUpperInvariant()}",
+                        nameof(srcIata));
+                }
 
-            if (!_airportDict.Query(dstIata, out var dstAirport))
+                if (!_airportDict.Query(dstIata.ToUpperInvariant(), out var dstAirport))
+                {
+                    throw new ArgumentException($"Invalid destination IATA code = {dstIata.ToUpperInvariant()}",
+                        nameof(dstIata));
+                }
+
+                return _distanceEval.EvalDistance(ref srcAirport, ref dstAirport);
+            }
+            catch (Exception ex)
             {
-                throw new ArgumentException($"Invalid destination IATA code = {dstIata}", nameof(dstIata));
+                _logger.LogError(ex, $"Error evaluating distance {srcIata}-{dstIata}.");
+                throw;
             }
+        }
 
-            return _distanceEval.EvalDistance(ref srcAirport, ref dstAirport);
+        public IAsyncEnumerable<string> GetAllCodes()
+        {
+            return _airportDict.GetAllCodes();
         }
     }
 }

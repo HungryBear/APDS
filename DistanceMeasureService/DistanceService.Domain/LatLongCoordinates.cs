@@ -20,11 +20,11 @@ Longitude: -180 to +180
         internal static readonly double LatLongEpsilon = 1e8;
 
         /// <summary>
-        /// Latitude value
+        /// Latitude value (in degrees)
         /// </summary>
         public double Latitude { get; }
         /// <summary>
-        /// Longitude value
+        /// Longitude value  (in degrees)
         /// </summary>
         public double Longitude { get; }
 
@@ -37,18 +37,18 @@ Longitude: -180 to +180
         /// <summary>
         /// Constructs new instance of the LatLongCoordinates 
         /// </summary>
-        /// <param name="lat"> Latitude value, should be between -85.0 and 85.0</param>
-        /// <param name="lon"> Longitude value, should be between -180.0 and 180.0</param>
+        /// <param name="lat"> Latitude value, degrees - should be between -85.0 and 85.0</param>
+        /// <param name="lon"> Longitude value,degrees -  should be between -180.0 and 180.0</param>
         /// <returns></returns>
         public static LatLongCoordinates New(double lat, double lon)
         {
             if (lat > MaxLat || lat < MinLat || double.IsNaN(lat))
             {
-                throw new ArgumentException("Invalid latitude value", nameof(lat));
+                throw new ArgumentException($"Invalid latitude value {lat}", nameof(lat));
             }
             if (lon > MaxLon || lon < MinLon || double.IsNaN(lon))
             {
-                throw new ArgumentException("Invalid longitude value", nameof(lon));
+                throw new ArgumentException($"Invalid longitude value {lon}", nameof(lon));
             }
 
             return new LatLongCoordinates(lat, lon);

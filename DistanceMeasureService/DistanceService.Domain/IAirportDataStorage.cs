@@ -1,4 +1,7 @@
-﻿namespace DistanceService.Domain
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace DistanceService.Domain
 {
     /// <summary>
     /// Describes airport data dictionary, with IATA airport code as an unique key and lat-long coordinates as the value
@@ -12,6 +15,8 @@
         /// <param name="coords"> Resulting lat-long coordinates </param>
         /// <returns>True if query is successful - in that case coords are initialized, false otherwise</returns>
         bool Query(string iataCode, out LatLongCoordinates coords);
+
+        IAsyncEnumerable<string> GetAllCodes();
         //System.Threading.ValueTask<(bool, LatLongCoordinates)> QueryAsync(string iataCode)
     }
 }

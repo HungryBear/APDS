@@ -6,13 +6,16 @@ namespace DistanceService.UnitTests
     public class DistanceEvalTests
     {
 
-        [Fact]
-        public void TestRealDistanceEvaluations()
+        [Theory]
+        [InlineData(1f, 1f, 1f, 1f, 0f, 1e-10d)]
+        public void TestRealDistanceEvaluations(double srcLat, double srcLong, double dstLat, double dstLong, double expectedDistance, double epsilon)
         {
             //WPK - DTW , 
             // double lat1 = 144.0019989013672, lon1 = -16.658300399780273, lat2 = -83.35340118408203, lon2 = 42.212398529052734;
-            var data = new[]{LatLongCoordinates.New(10f, 3f), LatLongCoordinates.New(4f, 5f)};
 
+            var src = LatLongCoordinates.New(srcLat, srcLong);
+            var dst = LatLongCoordinates.New(dstLat, dstLong);
+            Assert.True(Eval.Haversine(ref src, ref dst).NearEqual(expectedDistance, epsilon));
         }
 
         [Fact]
