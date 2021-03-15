@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DistanceService.Business;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace DistanceService.Rest.Controllers
@@ -29,13 +28,13 @@ namespace DistanceService.Rest.Controllers
         /// <param name="dst">Destination airport IATA code</param>
         /// <returns>Distance in miles between source and destination</returns>
         [HttpGet("/eval")]
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600)]
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 600, VaryByQueryKeys = new[] { "src", "dst" })]
         [ProducesResponseType(500)]
         [ProducesResponseType(typeof(double), 200)]
         public double GetDistance([FromQuery] string src, [FromQuery] string dst)
         {
 
-            var result = _distanceMeasureService.Eval(src, dst);
+            var result = _distanceMeasureService.EvaluateDistance(src, dst);
             _logger.LogInformation($"Request evaluation : Distance {src}-{dst} = {result:F7} miles");
             return result;
 

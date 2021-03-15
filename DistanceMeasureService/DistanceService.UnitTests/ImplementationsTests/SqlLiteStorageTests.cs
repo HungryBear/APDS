@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DistanceService.UnitTests.ImplementationsTests
 {
-    public class SqlLiteStorageTests
+    public class AirportDataStorageTests
     {
 
     }

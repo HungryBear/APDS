@@ -12,7 +12,7 @@ namespace Playground
     {
         static void Main(string[] args)
         {
-            // Csv data taken from https://pkgstore.datahub.io/core/airport-codes/airport-codes_csv/
+            // Csv data taken from https://datahub.io/core/airport-codes /  nhttps://pkgstore.datahub.io/core/airport-codes/airport-codes_csv/
             ConvertCsvToSqlLiteDb(@"F:\Downloads\airport-codes_csv.csv", @"E:\Depot\Source\AirportService\lDistanceService\DistanceService.sqlite");
 
         }

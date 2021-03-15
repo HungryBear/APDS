@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  test:
+    image: test
+    build:
+      context: ./DistanceService.IntegrationTests
+      dockerfile: Dockerfile
+    depends_on:
+      - distanceservicerest
+  distanceservicerest:
+    image: distanceservicerest
+    build:
+      context: ./
+      dockerfile: Dockerfile

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace DistanceService.Domain
 {
@@ -11,22 +12,40 @@ namespace DistanceService.Domain
         /// </summary>
         /// <param name="src"> Source lat-long point</param>
         /// <param name="dst"> Destination lat-long point</param>
-        /// <returns> Distance in meters </returns>
-        public static double Haversine(ref LatLongCoordinates src, ref LatLongCoordinates dst)
+        /// <param name="earthRadius"> Earth radius. The value of this constant controls the measurement units of the output, i.e. if it is specified in meters the output value will be in meters. Default parameter value is in miles - 3960.</param>
+        /// <returns> Distance in the units specified by the earthRadius param, miles by default</returns>
+        public static double HaversineDistance(ref LatLongCoordinates src, ref LatLongCoordinates dst, double earthRadius = 3960d)
         {
-            const double R = 6371e3; // earth radius in m
-            var f1 = src.Latitude * PiDiv180;
-            var f2 = dst.Latitude * PiDiv180;
-            var df = (dst.Latitude - src.Latitude) * PiDiv180;
-            var dl = (dst.Longitude - src.Longitude) * PiDiv180;
+            var R = earthRadius;
+            var dLat = ToRadians(dst.Latitude - src.Latitude);
+            var dLon = ToRadians(dst.Longitude - src.Longitude);
 
-            var a = Math.Sin(df / 2d) * Math.Sin(df / 2d) +
-                    Math.Cos(f1) * Math.Cos(f2) *
-                    Math.Sin(dl / 2d) * Math.Sin(dl / 2d);
-            var c = 2d * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1d - a));
+            var a = Math.Sin(dLat / 2d) * Math.Sin(dLat / 2d) +
+                       Math.Cos(ToRadians(src.Latitude)) * Math.Cos(ToRadians(dst.Latitude)) *
+                       Math.Sin(dLon / 2d) * Math.Sin(dLon / 2d);
+            var c = 2d * Math.Asin(Math.Min(1d, Math.Sqrt(a)));
+            var d = R * c;
 
-            var d = R * c; // in m
             return d;
         }
+
+
+        public static double VincentyDistance(ref LatLongCoordinates src, ref LatLongCoordinates dst,
+            double earthRadius = 3960d)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+        /// <summary>
+        /// Convert angle value from degrees to radians.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double ToRadians(double angle)
+        {
+            return angle * PiDiv180;
+        }
+
     }
 }

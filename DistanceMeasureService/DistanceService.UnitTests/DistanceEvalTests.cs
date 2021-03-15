@@ -7,15 +7,13 @@ namespace DistanceService.UnitTests
     {
 
         [Theory]
-        [InlineData(1f, 1f, 1f, 1f, 0f, 1e-10d)]
+        [InlineData(41.385064, 2.173403, 59.802913, 30.267839, 1746, 0.5d)] // LED-BCN, error ~ 0.5
         public void TestRealDistanceEvaluations(double srcLat, double srcLong, double dstLat, double dstLong, double expectedDistance, double epsilon)
         {
-            //WPK - DTW , 
-            // double lat1 = 144.0019989013672, lon1 = -16.658300399780273, lat2 = -83.35340118408203, lon2 = 42.212398529052734;
-
             var src = LatLongCoordinates.New(srcLat, srcLong);
             var dst = LatLongCoordinates.New(dstLat, dstLong);
-            Assert.True(Eval.Haversine(ref src, ref dst).NearEqual(expectedDistance, epsilon));
+            var distance = Eval.HaversineDistance(ref src, ref dst);
+            Assert.True(distance.NearEqual(expectedDistance, epsilon));
         }
 
         [Fact]
@@ -24,7 +22,7 @@ namespace DistanceService.UnitTests
             var p1 = new LatLongCoordinates();
             var p2 = new LatLongCoordinates();
 
-            Assert.True(Eval.Haversine(ref p1, ref p2).NearEqual(0));
+            Assert.True(Eval.HaversineDistance(ref p1, ref p2).NearEqual(0));
         }
     }
 }

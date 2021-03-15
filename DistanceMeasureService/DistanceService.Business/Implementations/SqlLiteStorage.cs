@@ -6,9 +6,7 @@ using DistanceService.Domain;
 
 namespace DistanceService.Business.Implementations
 {
-    // ADD Logging EVERYWHERE
-
-    public class SqlLiteStorage : IAirportDataStorage, IDisposable
+    internal class SqlLiteStorage : IAirportDataStorage, IDisposable
     {
         private const string IataCodeParam = "@iataCode";
         private static readonly string SelectCoordsQuery = $"SELECT LAT, LON FROM airports WHERE IATA_CODE = {IataCodeParam}";

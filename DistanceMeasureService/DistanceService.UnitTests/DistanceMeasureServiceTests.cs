@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using DistanceService.Business;
 using DistanceService.Domain;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Moq;
 using Xunit;
 
@@ -13,14 +10,37 @@ namespace DistanceService.UnitTests
     public class DistanceMeasureServiceTests
     {
         [Fact]
-        public void TestNormalFlow()
+        public void TestNormalFlow_Mocks()
         {
             var svc = CreateDistanceEvalComponent(out var dataComponent, out var distanceEvalComponent);
             dataComponent.Setup(m => m.Query(It.IsAny<string>(), out It.Ref<LatLongCoordinates>.IsAny)).Returns(() => true);
 
-            svc.Eval("ABC", "CBA");
+            svc.EvaluateDistance("ABC", "CBA");
             dataComponent.Verify(m => m.Query(It.IsAny<string>(), out It.Ref<LatLongCoordinates>.IsAny), Times.Exactly(2));
             distanceEvalComponent.Verify(m => m.EvalDistance(ref It.Ref<LatLongCoordinates>.IsAny, ref It.Ref<LatLongCoordinates>.IsAny), Times.Once);
+        }
+
+
+        [Fact]
+        public void TestArgumentNullExceptions_Mocks()
+        {
+            var svc = CreateDistanceEvalComponent(out var dataComponent, out var distanceEvalComponent);
+            dataComponent.Setup(m => m.Query(It.IsAny<string>(), out It.Ref<LatLongCoordinates>.IsAny)).Returns(() => true);
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance(null, "CBA"));
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance("ABC", null));
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance(string.Empty, "CBA"));
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance("ABC", string.Empty));
+        }
+
+        [Fact]
+        public void TestEmptyIATAQueryExceptions_Mocks()
+        {
+            var svc = CreateDistanceEvalComponent(out var dataComponent, out var distanceEvalComponent);
+            dataComponent.Setup(m => m.Query(It.IsAny<string>(), out It.Ref<LatLongCoordinates>.IsAny)).Returns(() => false);
+            Assert.Throws<ArgumentException>(() => svc.EvaluateDistance(null, "CBA"));
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance("ABC", null));
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance(string.Empty, "CBA"));
+            Assert.Throws<ArgumentNullException>(() => svc.EvaluateDistance("ABC", string.Empty));
         }
 
         private static DistanceMeasureService CreateDistanceEvalComponent(out Mock<IAirportDataStorage> dataComponent, out Mock<IDistanceEvaluationComponent> svc)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DistanceService.Domain;
 using Microsoft.Extensions.Logging;
+
 namespace DistanceService.Business
 {
     public class DistanceMeasureService
@@ -17,26 +18,30 @@ namespace DistanceService.Business
             _logger = logger;
         }
 
-        public double Eval(string srcIata, string dstIata)
+        public double EvaluateDistance(string srcIata, string dstIata)
         {
+            if (string.IsNullOrWhiteSpace(srcIata))
+                throw new ArgumentNullException(nameof(srcIata));
+            if (string.IsNullOrWhiteSpace(dstIata))
+                throw new ArgumentNullException(nameof(dstIata));
+            var normalizedSource = srcIata.ToUpperInvariant();
+
+            if (!_airportDict.Query(normalizedSource, out var srcAirport))
+            {
+                throw new ArgumentException($"Invalid source IATA code = {normalizedSource}",
+                    nameof(srcIata));
+            }
+
+            var normalizedDest = dstIata.ToUpperInvariant();
+
+            if (!_airportDict.Query(normalizedDest, out var dstAirport))
+            {
+                throw new ArgumentException($"Invalid destination IATA code = {normalizedDest}",
+                    nameof(dstIata));
+            }
+
             try
             {
-                if (string.IsNullOrWhiteSpace(srcIata))
-                    throw new ArgumentNullException(nameof(srcIata));
-                if (string.IsNullOrWhiteSpace(dstIata))
-                    throw new ArgumentNullException(nameof(dstIata));
-                if (!_airportDict.Query(srcIata.ToUpperInvariant(), out var srcAirport))
-                {
-                    throw new ArgumentException($"Invalid source IATA code = {srcIata.ToUpperInvariant()}",
-                        nameof(srcIata));
-                }
-
-                if (!_airportDict.Query(dstIata.ToUpperInvariant(), out var dstAirport))
-                {
-                    throw new ArgumentException($"Invalid destination IATA code = {dstIata.ToUpperInvariant()}",
-                        nameof(dstIata));
-                }
-
                 return _distanceEval.EvalDistance(ref srcAirport, ref dstAirport);
             }
             catch (Exception ex)
